@@ -1,15 +1,22 @@
 const express = require("express");
 const userData = require("./userData");
-const UserActivationRouter = require("./Routes/UserActivityRoute");
+const UserActivityRouter = require("./Routes/UserActivityRoute");
 const HomeRouter = require("./Routes/HomeRoute");
-const { homeResponse, aboutResponse } = require("./Controllers/HomeController");
-const { getAllUsers, getUserByGender, getUserByFirstName } = require("./Controllers/UserActivityController");
+const BlogsRouter = require("./Routes/BlogsRoute");
+const UserRoute = require("./Routes/UserRoute");
 const { mongoose } = require("mongoose");
 const server = express();
 const PORT = 8089;
 
 
+
+// MIDDLEWARE
+// this is a body parser
+server.use(express.json());
+
+
 server.use("/", HomeRouter);
+
 
 server.get("/fitness", (req, res) => {
   const fitnessData = {
@@ -26,8 +33,12 @@ server.get("/fitness", (req, res) => {
 
 
 
-server.use("/api/v1/users", UserActivationRouter);
+server.use("/api/v1/users", UserActivityRouter);
 
+server.use("/api/v1/blog", BlogsRouter);
+
+
+server.use("/api/v2/users", UserRoute);
 
 // DB CONNECTION 
 mongoose.connect("mongodb://localhost:27017/Crio-sept").then(() => {
