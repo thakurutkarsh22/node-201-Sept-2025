@@ -1,4 +1,5 @@
 const UserModel = require("../Model/UserMode");
+const UserService = require("../Service/UserService");
 
 
 async function createUser (req, res) {
@@ -7,16 +8,18 @@ async function createUser (req, res) {
         return res.status(400).json({ error: 'Name and email are required.' });
     }
 
-    const userObj = new UserModel({
-        name, email, password
-    });
-
     try {
-        const response = await userObj.save();
+        const response = await UserService.createUser(name, email, password);
         res.status(201).json(response);
     } catch (error) {
         res.status(500).json({ error });
     }
 };
+
+
+async function getUserByFirstName (req, res) {
+    const { firstName } = await UserModel.find({ name: req.params.firstName });
+    res.status(200).json({ message: `User with first name ${firstName} found.` });
+}
 
 module.exports = { createUser };
