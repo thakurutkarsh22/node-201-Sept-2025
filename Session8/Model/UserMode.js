@@ -22,6 +22,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    age: {
+        type: Number,
+        min: 18
+    },
+    phoneNumber: {
+        type: String,
+        trim: true,
+        validate: (data) => {
+            return validatorPackage.isMobilePhone(data, 'any');
+        }
+    },
     createdAt: {
         type: Date,
         default: Date.now

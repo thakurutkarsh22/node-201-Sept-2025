@@ -4,9 +4,13 @@ const UserActivityRouter = require("./Routes/UserActivityRoute");
 const HomeRouter = require("./Routes/HomeRoute");
 const BlogsRouter = require("./Routes/BlogsRoute");
 const UserRoute = require("./Routes/UserRoute");
+const AuthRoute = require("./Routes/AuthRoute");
 const { mongoose } = require("mongoose");
 const server = express();
 const PORT = 8089;
+
+const dotEnv = require("dotenv");
+dotEnv.config();
 
 
 
@@ -40,8 +44,13 @@ server.use("/api/v1/blog", BlogsRouter);
 
 server.use("/api/v2/users", UserRoute);
 
+
+server.use("/api/v2/auth", AuthRoute);
+
+
 // DB CONNECTION 
-mongoose.connect("mongodb://localhost:27017/Crio-sept").then(() => {
+const DBURL = process.env.DB_URL_DEV;
+mongoose.connect(DBURL).then(() => {
   console.log("Connected to MongoDB");
 }).catch((err) => {
   console.error("Error connecting to MongoDB", err);
@@ -51,3 +60,9 @@ mongoose.connect("mongodb://localhost:27017/Crio-sept").then(() => {
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+// dot env
+/**
+ * 1. hides the secret form the server 
+ * 2. we can make it as env variable
+ */
