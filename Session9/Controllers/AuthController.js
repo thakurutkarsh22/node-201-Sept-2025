@@ -21,9 +21,9 @@ async function login(req, res) {
     const { email, password } = body;
 
     try {
-        const response = await UserService.loginUser(email, password);
-        if(response.isLogged) {
-            res.status(200).json({ success: true, message: "Login successful" });
+        const {isLogged, token} = await UserService.loginUser(email, password);
+        if(isLogged) {
+            res.status(200).json({ success: true, message: "Login successful", token });
         }  else {
             res.status(401).json({ success: false, message: "Invalid credentials" });
         }

@@ -1,8 +1,12 @@
 const UserModel = require("../Model/UserMode");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET_KEY } = require("../Middleware/AuthMiddleware");
+
 
 class UserService {
 
+    // this is signup
     static async createUser(name, email, password, age, phoneNumber) {
 
         // business logic
@@ -31,7 +35,8 @@ class UserService {
     static async loginUser(email, password) {
         // password : asdf1234
         const loggedInUser = {
-            isLogged: false
+            isLogged: false,
+            token: ""
         }
 
         try {
@@ -43,14 +48,26 @@ class UserService {
                 // 1. passwoord match
                 const encryptedPassword = user.password; // $2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW
                 const isPasswordMatch = await bcrypt.compare(password, encryptedPassword);
+
+                if(isPasswordMatch) {
+                    const payload = {userEmail: user.email, id: user.id}
+                    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "10000" });
+                    return {
+                        isLogged: isPasswordMatch,
+                        token
+                    }
+                }
+
                 return {
                     isLogged: isPasswordMatch,
+                    token: ""
                 }
 
             }
         } catch (error) {
             return {
-                isLogged: false
+                isLogged: false,
+                token: ""
             }
         }
 
