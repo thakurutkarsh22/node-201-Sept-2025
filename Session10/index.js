@@ -6,17 +6,26 @@ const BlogsRouter = require("./Routes/BlogsRoute");
 const UserRoute = require("./Routes/UserRoute");
 const AuthRoute = require("./Routes/AuthRoute");
 const { mongoose } = require("mongoose");
+
+
 const server = express();
 const PORT = 8089;
+const passport = require("passport");
+const configPassport = require("./Config/Passport");
+
 
 const dotEnv = require("dotenv");
 dotEnv.config();
+
+configPassport(passport);
 
 
 
 // MIDDLEWARE
 // this is a body parser
 server.use(express.json());
+
+
 
 
 server.use("/", HomeRouter);
